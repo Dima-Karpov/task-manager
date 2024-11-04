@@ -2,8 +2,12 @@ package storage
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/jackc/pgx/v4/pgxpool"
+
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq" // Импорт драйвера PostgreSQL
 )
 
 // Хранилище данных.
@@ -21,16 +25,34 @@ type Task struct {
 	Content    string
 }
 
-// Конструктор, принимает строку подключения к БД.
-func New(constr string) (*Storage, error) {
-	db, err := pgxpool.Connect(context.Background(), constr)
+type Config struct {
+	Host     string
+	Port     string
+	Username string
+	Password string
+	DBName   string
+	SSLMode  string
+}
+
+func New(cfg Config) (*sqlx.DB, error) {
+	db, err := sqlx.Open(
+		"postgres",
+		fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
+			cfg.Host,
+			cfg.Port,
+			cfg.Username,
+			cfg.Password,
+			cfg.DBName,
+			cfg.SSLMode,
+		))
 	if err != nil {
 		return nil, err
 	}
-	s := Storage{
-		db: db,
+	err = db.Ping()
+	if err != nil {
+		return nil, err
 	}
-	return &s, nil
+	return db, nil
 }
 
 // Tasks возвращает список задач из БД.

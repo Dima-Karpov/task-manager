@@ -3,6 +3,7 @@
 .bin
 .DS_Store
 .env.local
+.env
 .run
 __debug_*
 
@@ -12,3 +13,4 @@ docker-compose.override.yml
 
 # Visual Studio Settings
 .vscode
+

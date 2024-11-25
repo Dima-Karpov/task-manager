@@ -10,9 +10,9 @@ import (
 	"os/signal"
 	"syscall"
 	todo "task-manager"
-	"task-manager/pkg/handler"
+	"task-manager/pkg/handler/postgres"
 	"task-manager/pkg/repository/postrges"
-	"task-manager/pkg/service"
+	"task-manager/pkg/service/postgres"
 	postgres "task-manager/pkg/storage/postgres"
 
 	"github.com/joho/godotenv"
@@ -49,9 +49,9 @@ func main() {
 	// Проверка соединения
 	err = db.Ping()
 	if err != nil {
-		fmt.Println("Не удалось подключиться к БД:", err)
+		fmt.Println("Не удалось подключиться к БД postgres:", err)
 	} else {
-		fmt.Println("Успешное подключение к БД!")
+		fmt.Println("Успешное подключение к БД postgres!")
 	}
 
 	repos := postrges.NewRepository(db)

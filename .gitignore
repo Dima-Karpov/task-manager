@@ -6,6 +6,7 @@
 .env
 .run
 __debug_*
+_volume
 
 cover.out
 

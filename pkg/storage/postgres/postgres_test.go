@@ -1,53 +1,48 @@
 package storage
 
 import (
-	"log"
-	"os"
+	"context"
+	"fmt"
 	"testing"
+
+	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/stretchr/testify/assert"
 )
 
-var s *Storage
-
-func TestMain(m *testing.M) {
-	pwd := os.Getenv("dbpass")
-	if pwd == "" {
-		m.Run()
-	}
-	connstr := "postgres://" + pwd + "@localhost:5434/tasks"
-	var err error
-	s, err = New(connstr)
+func TestTasks(t *testing.T) {
+	// Создание фейковой базы данных для тестирования
+	dbPool, err := pgxpool.Connect(context.Background(), "postgresql://task-manager:OvoIpFrIL2VS@localhost:5436/postgres")
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
-	os.Exit(m.Run())
+	fmt.Println("К базе подключился")
+	defer dbPool.Close()
+
+	storage := &Storage{db: dbPool}
+
+	// Тестирование метода Tasks
+	tasks, err := storage.Tasks(0, 0)
+	assert.NoError(t, err)
+	assert.NotNil(t, tasks)
 }
 
-func TestStorage_Tasks(t *testing.T) {
-	data, err := s.Tasks(0, 0)
+func TestNewTask(t *testing.T) {
+	// Создание фейковой базы данных для тестирования
+	dbPool, err := pgxpool.Connect(context.Background(), "postgresql://task-manager:OvoIpFrIL2VS@localhost:5436/postgres")
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Log(data)
-	data, err = s.Tasks(1, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log(data)
-}
+	fmt.Println("К базе подключился")
+	defer dbPool.Close()
 
-func TestStorage_NewTask(t *testing.T) {
-	task := Task{
-		Title:   "Unit Test Task",
-		Content: "Task Content",
+	storage := &Storage{db: dbPool}
+
+	// Тестирование метода NewTask
+	newTask := Task{
+		Title:   "Test Task",
+		Content: "This is a test task.",
 	}
-	id, err := s.NewTask(task)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log("Создана задача с id: ", id)
-	tasks, err := s.Tasks(0, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	t.Log(tasks)
+	id, err := storage.NewTask(newTask)
+	assert.NoError(t, err)
+	assert.Greater(t, id, 0)
 }

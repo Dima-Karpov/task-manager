@@ -23,6 +23,8 @@ services:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
       - POSTGRES_DB
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
 
   db_mongo:
     container_name: mongo_db

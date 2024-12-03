@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"task-manager/pkg/service/postgres"
+	service "task-manager/pkg/service/postgres"
 )
 
 type Handler struct {
@@ -20,6 +20,18 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
+	}
+
+	api := router.Group("api", h.userIdentity)
+	{
+		posts := api.Group("/posts")
+		{
+			posts.POST("/", h.create)
+			posts.GET("/", h.getAll)
+			posts.GET("/:id", h.getById)
+			posts.DELETE("/:id", h.delete)
+			posts.PUT("/:id", h.update)
+		}
 	}
 
 	return router

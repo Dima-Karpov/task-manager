@@ -6,10 +6,6 @@ import (
 	"task-manager/internal/entities"
 )
 
-const (
-	usersTable = "users"
-)
-
 type AuthPostgres struct {
 	db *sqlx.DB
 }

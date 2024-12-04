@@ -1,0 +1,356 @@
+basePath: /
+definitions:
+  entities.CreatePostListBody:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  entities.PostList:
+    properties:
+      content:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  entities.UpdatePostListBody:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
+  entities.User:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  responses.CreatePostResponse:
+    properties:
+      id:
+        type: integer
+    type: object
+  task-manager_pkg_handler_postgres.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  task-manager_pkg_handler_postgres.signInInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  task-manager_pkg_handler_postgres.statusResponse:
+    properties:
+      status:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: API Server for TaskManager Application
+  title: Task Manager API
+  version: "1.0"
+paths:
+  /api/posts:
+    get:
+      consumes:
+      - application/json
+      description: get all posts
+      operationId: get-all-posts
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get All Posts
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: create post
+      operationId: create-post
+      parameters:
+      - description: list info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entities.CreatePostListBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.CreatePostResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Create post
+      tags:
+      - posts
+  /api/posts/{postId}:
+    delete:
+      consumes:
+      - application/json
+      description: delete post
+      operationId: delete-post
+      parameters:
+      - description: ID post
+        in: path
+        name: postId
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete post
+      tags:
+      - posts
+    get:
+      consumes:
+      - application/json
+      description: get post by id
+      operationId: get-post-by-id
+      parameters:
+      - description: ID list
+        in: path
+        name: postId
+        required: true
+        type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entities.PostList'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Post By ID
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: update post
+      operationId: update-post
+      parameters:
+      - description: ID list
+        in: path
+        name: postId
+        required: true
+        type: number
+      - description: Data for list
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UpdatePostListBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.statusResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Update post
+      tags:
+      - posts
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/task-manager_pkg_handler_postgres.signInInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: token
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      summary: SignIn
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      operationId: create-account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/entities.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/task-manager_pkg_handler_postgres.errorResponse'
+      summary: SignUp
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -13,6 +13,15 @@ type PostList struct {
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
 }
+type CreatePostListBody struct {
+	Title   string `json:"title" db:"title"`
+	Content string `json:"content" db:"content"`
+}
+
+type UpdatePostListBody struct {
+	Title   string
+	Content string
+}
 
 type PostListMongo struct {
 	Id        primitive.ObjectID `json:"id" bson:"_id,omitempty"`

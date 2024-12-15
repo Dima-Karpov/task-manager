@@ -7,3 +7,4 @@ db:
   password: "POSTGRES_PASSWORD"
   dbname: "postgres"
   sslmode: "disable"
+  mariadsn: "DB_DSN"

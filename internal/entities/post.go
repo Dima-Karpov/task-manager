@@ -2,6 +2,7 @@ package entities
 
 import (
 	"errors"
+	"github.com/gofrs/uuid"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
@@ -38,9 +39,32 @@ type UsersList struct {
 	PostId int
 }
 
+type UsersListMaria struct {
+	Id     uuid.UUID `gorm:"type:uuid;primary_key;"`
+	UserId uuid.UUID `gorm:"type:uuid;not null"`
+	PostId uuid.UUID `gorm:"type:uuid;not null"`
+}
+
+type PostListMaria struct {
+	Id         uuid.UUID `gorm:"type:uuid;primary_key;"`
+	UserPostId uuid.UUID `gorm:"type:uuid;not null;index"`
+	Title      string    `gorm:"type:varchar(255);not null"`
+	Content    string    `gorm:"not null"`
+	CreatedAt  time.Time `gorm:"not null"`
+	UpdatedAt  time.Time `gorm:"not null"`
+}
+
 type UpdatePostInput struct {
 	Title   *string `json:"title"`
 	Content *string `json:"content"`
+}
+
+type PostResponseMaria struct {
+	Id        uuid.UUID `json:"Id"`
+	Title     string    `json:"Title"`
+	Content   string    `json:"Content"`
+	CreatedAt time.Time `json:"CreatedAt"`
+	UpdatedAt time.Time `json:"UpdatedAt"`
 }
 
 func (i UpdatePostInput) Validate() error {

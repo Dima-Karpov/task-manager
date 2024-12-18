@@ -12,6 +12,7 @@ import (
 
 const (
 	usersTable = "users"
+	postsTable = "posts"
 )
 
 type AuthMongo struct {
@@ -22,7 +23,7 @@ func NewAuthMongo(db *mongo.Client) *AuthMongo {
 	return &AuthMongo{db: db}
 }
 
-func (r *AuthMongo) CreateUser(user entities.User) (string, error) {
+func (r *AuthMongo) CreateUser(user entities.UserMongo) (string, error) {
 	usersCollection := r.db.Database(usersTable).Collection(usersTable)
 
 	result, err := usersCollection.InsertOne(context.Background(), user)
@@ -38,8 +39,8 @@ func (r *AuthMongo) CreateUser(user entities.User) (string, error) {
 	return objectID.Hex(), nil
 }
 
-func (r *AuthMongo) GetUser(username, password string) (entities.User, error) {
-	var user entities.User
+func (r *AuthMongo) GetUser(username, password string) (entities.UserMongo, error) {
+	var user entities.UserMongo
 	filter := bson.D{{"username", username}, {"password", password}}
 	usersCollection := r.db.Database(usersTable).Collection(usersTable)
 	err := usersCollection.FindOne(context.Background(), filter).Decode(&user)

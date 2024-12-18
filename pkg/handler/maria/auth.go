@@ -8,7 +8,7 @@ import (
 
 func (h *Handler) signUp(c *gin.Context) {
 
-	var input entities.UserMongo
+	var input entities.UserMaria
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
@@ -23,15 +23,16 @@ func (h *Handler) signUp(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
+
 }
 
-type signInInput struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+type singInInput struct {
+	Username string `gorm:"type:varchar(255);not null"`
+	Password string `gorm:"type:varchar(1000);not null"`
 }
 
-func (h *Handler) signIn(c *gin.Context) {
-	var input signInInput
+func (h *Handler) singIn(c *gin.Context) {
+	var input singInInput
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())

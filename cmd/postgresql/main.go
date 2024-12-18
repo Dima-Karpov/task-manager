@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"log"
@@ -13,10 +14,18 @@ import (
 	"task-manager/pkg/handler/postgres"
 	"task-manager/pkg/repository/postrges"
 	"task-manager/pkg/service/postgres"
-	postgres "task-manager/pkg/storage/postgres"
-
-	"github.com/joho/godotenv"
 )
+
+// @title Task Manager API
+// @version 1.0
+// @description API Server for TaskManager Application
+
+// @host localhost:8000
+// @BasePath /
+
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 
 func main() {
 	logrus.SetFormatter(new(logrus.JSONFormatter))
@@ -30,8 +39,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	db, err := postgres.NewPostgresDB(
-		postgres.Config{
+	db, err := postrges.NewPostgresDB(
+		postrges.Config{
 			Host:     viper.GetString("db.host"),
 			Port:     viper.GetString("db.port"),
 			Username: os.Getenv(viper.GetString("db.username")),

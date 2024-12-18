@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/gofrs/uuid"
 	"net/http"
 	"strings"
 )
@@ -29,20 +30,21 @@ func (h *Handler) userIdentity(c *gin.Context) {
 	if err != nil {
 		newErrorResponse(c, http.StatusUnauthorized, err.Error())
 	}
-
 	c.Set(userCtx, userId)
 }
 
-func getUserId(c *gin.Context) (int, error) {
+func getUserId(c *gin.Context) (uuid.UUID, error) {
 	id, ok := c.Get(userCtx)
 	if !ok {
-		return 0, errors.New("user id not found")
+		return uuid.Nil, errors.New("user id not found")
 	}
 
-	idInt, ok := id.(int)
+	idStr, ok := id.(string)
 	if !ok {
-		return 0, errors.New("user id is of invalid type")
+		return uuid.Nil, errors.New("user id is of invalid type")
 	}
 
-	return idInt, nil
+	var userIdUUID = uuid.Must(uuid.FromString(idStr))
+
+	return userIdUUID, nil
 }
